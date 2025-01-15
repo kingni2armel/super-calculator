@@ -1,0 +1,27 @@
+name: Lint
+
+on:
+  pull_request:
+  push:
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run Semgrep
+        run: |
+          curl -sSL https://github.com/returntocorp/semgrep/releases/download/v0.72.0/semgrep-linux-amd64-v0.72.0.tar.gz | tar -xz
+          ./semgrep --config=auto .
+
+      - name: Run Hadolint
+        run: hadolint Dockerfile
+
+      - name: Run Super-Linter (only on pull_request)
+        if: github.event_name == 'pull_request'
+        uses: github/super-linter@v4
+        env:
+          RUN_LOCAL: true

@@ -1,4 +1,4 @@
-name: Lint
+name: Lint Workflow
 
 on:
   pull_request:
@@ -6,22 +6,33 @@ on:
   workflow_dispatch:
 
 jobs:
-  lint:
+  semgrep:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Run Semgrep
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Install Semgrep
         run: |
-          curl -sSL https://github.com/returntocorp/semgrep/releases/download/v0.72.0/semgrep-linux-amd64-v0.72.0.tar.gz | tar -xz
-          ./semgrep --config=auto .
+          python -m pip install --upgrade pip
+          pip install semgrep
+
+      - name: Run Semgrep
+        run: semgrep --config=auto .
+
+  hadolint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Hadolint
+        run: curl -sSL https://github.com/hadolint/hadolint/releases/download/v2.8.0/hadolint-linux-amd64 -o /usr/local/bin/hadolint && chmod +x /usr/local/bin/hadolint
 
       - name: Run Hadolint
         run: hadolint Dockerfile
-
-      - name: Run Super-Linter (only on pull_request)
-        if: github.event_name == 'pull_request'
-        uses: github/super-linter@v4
-        env:
-          RUN_LOCAL: true

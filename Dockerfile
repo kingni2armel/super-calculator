@@ -6,10 +6,10 @@ WORKDIR /app
 # Use COPY instead of ADD
 COPY go.mod ./
 COPY go.sum ./
-RUN go mod download
+RUN  go mod download
 
 # Copy the source code
-COPY . .
+
 
 # Build the Go application
 RUN go build -o /calculator

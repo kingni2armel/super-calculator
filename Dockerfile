@@ -6,11 +6,11 @@ COPY go.mod ./
 COPY go.sum ./
 RUN go mod download
 
-ADD . .
+COPY . .
 
 RUN go build -o /calculator
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get install -y curl=7.68.0-1ubuntu2.6 \
     curl \
     && curl -sSL https://github.com/hadolint/hadolint/releases/download/v2.8.0/hadolint-Linux-x86_64 -o /usr/local/bin/hadolint \
     && chmod +x /usr/local/bin/hadolint

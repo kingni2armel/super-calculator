@@ -31,4 +31,4 @@ COPY --from=build /calculator /calculator
 USER nonroot:nonroot
 
 # Set the entry point for the container
-ENTRYPOINT ["/calculator"]
+ENTRYPOINT ["/super_calculator"]

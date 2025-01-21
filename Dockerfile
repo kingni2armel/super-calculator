@@ -25,7 +25,7 @@ FROM gcr.io/distroless/base-debian10:latest
 WORKDIR /
 
 # Copy the built binary from the build stage
-COPY --from=build /calculator /calculator
+COPY --from=build /super_calculator /super_calculator
 
 # Use non-root user
 USER nonroot:nonroot
